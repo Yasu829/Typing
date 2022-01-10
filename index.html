@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div id="title">
+      <h1>ヤスタイプ
+      </h1>
+    </div>
+    <div id="commands">
+      <div id="wrapper">
+        <ul>
+          <li id="play" class="overlay-play-event">
+            <h2>プレイ</h2>
+          </li>
+        </ul>
+        <ul>
+          <li id="option" class="overlay-option-event">
+            <h2>オプション</h2>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="overlay-play">
+      <div class="flex">
+        <div id="overlay-play-inner">
+          <p>プレイ</p>
+          <button id="close-btn" class="overlay-play-event" type=button>Close</button>
+        </div>
+      </div>
+    </div>
+    <div id="overlay-option">
+      <div class="flex">
+        <div id="overlay-option-inner">
+          <p>オプション</p>
+          <input id="R" type="range" min="0" max="255">
+          <input id="G" type="range" min="0" max="255">
+          <input id="B" type="range" min="0" max="255">
+          <button id="close-btn" class="overlay-option-event" type=button>Close</button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <link href="styles.css" rel="stylesheet">
+</html>

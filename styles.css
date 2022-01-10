@@ -1,0 +1,145 @@
+body{
+  background-color: rgb(230,230,230); 
+}
+ul{
+  list-style:none;
+  padding: 0px;
+}
+ul > li{
+  margin:20px;
+  border-radius: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: -35px;
+  border: 10px solid black;
+  width: 420px;
+  text-align: center;
+}
+h1{
+  font-size:90px;
+  color:rgb(40,40,40);
+}
+h2{
+  color:rgb(40,40,40);
+  height: 80px;
+  font-size: 50px;
+}
+#title{
+  margin-top: 30px;
+  height: 200px;
+  background-color: rgb(200,200,200);
+  display:-webkit-flex;
+  display:flex;
+  justify-content: center;
+  align-items: center; 
+}
+#title > h1{
+  text-align: center;
+}
+#commands{
+  margin-top: 50px;
+  width:96vw;
+  height: 560px;
+  background-color: rgb(200,200,200);
+  display:-webkit-flex;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+#wrapper{
+  display:inline;
+  background-color: rgb(230,230,230);
+  height:90%;
+  width: 72vw;
+  display:-webkit-flex;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+#play{
+  background-color: rgb(200,200,200);
+  background-image:url("Assets/Images/Play.png");
+  border-style: dotted;
+}
+#play > h2{
+  margin-top: 170px;
+  margin-bottom:-10px;
+}
+#play:hover{
+  cursor:pointer;
+}
+#option{
+  background-color: rgb(200,200,200);
+  background-image:url("Assets/Images/Option.png");
+  border-style: dashed;
+}
+#option > h2{
+  margin-top: 170px;
+  margin-bottom:-10px;
+}
+#option:hover{
+  cursor:pointer;
+}
+
+#overlay-play{
+  position: fixed;
+  top:0;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  visibility: hidden;
+  opacity: 0;
+  background: rgba(0,0,0,0.6);
+  transition: all 0.5s ease-out;
+}
+#overlay-option{
+  position: fixed;
+  top:0;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  visibility: hidden;
+  opacity: 0;
+  background: rgba(0,0,0,0.6);
+  transition: all 0.5s ease-out;
+}
+#overlay-play.overlay-on{
+  visibility: visible;
+  opacity: 1;
+}
+#overlay-option.overlay-on{
+  visibility: visible;
+  opacity: 1;
+}
+
+.flex{
+  width: 100%;
+  height:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+#overlay-play-inner{
+  width:75vw;
+  height:75vh;
+  padding:10px 60px;
+  background-color:#FFF;
+  text-align:center;
+}
+#overlay-option-inner{
+  width:40vw;
+  height:40vh;
+  padding:10px 60px;
+  background-color:#FFF;
+  text-align:center;
+}
+
+#close-btn{
+  display:block;
+  margin:20px auto;
+  padding:10px 30px;
+  background-color:#eee;
+  border:solid #ccc 1px;
+  cursor: pointer;
+}
