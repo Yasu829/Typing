@@ -4,20 +4,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="main.js"></script>
   </head>
-  <body>
-    <div id="title">
-      <h1>タイピングゲーム
+  <body class="color2">
+    <div id="title" class="color1">
+      <h1>ヤスタイプ
       </h1>
     </div>
-    <div id="commands">
-      <div id="wrapper">
+    <div id="commands" class="color1">
+      <div id="wrapper" class="color2">
         <ul>
-          <li id="play" class="overlay-play-event">
+          <li id="play" class="overlay-play-event color1">
             <h2>プレイ</h2>
           </li>
         </ul>
         <ul>
-          <li id="option" class="overlay-option-event">
+          <li id="option" class="overlay-option-event color1">
             <h2>オプション</h2>
           </li>
         </ul>
@@ -25,20 +25,41 @@
     </div>
     <div id="overlay-play">
       <div class="flex">
-        <div id="overlay-play-inner">
+        <div id="overlay-play-inner" class="border1">
           <p>プレイ</p>
-          <button id="close-btn" class="overlay-play-event" type=button>Close</button>
+          <iframe id="">
+          </iframe>
+          <br>
+          <button class="overlay-play-event btn_a" type=button>Close</button>
         </div>
       </div>
     </div>
     <div id="overlay-option">
       <div class="flex">
-        <div id="overlay-option-inner">
+        <div id="overlay-option-inner" class="border1">
           <p>オプション</p>
-          <input id="R" type="range" min="0" max="255">
-          <input id="G" type="range" min="0" max="255">
-          <input id="B" type="range" min="0" max="255">
-          <button id="close-btn" class="overlay-option-event" type=button>Close</button>
+            <ul id="option_left">
+              <ol>
+                <p id="theme_color_title" class="color_try">テーマ色</p>
+              </ol>
+              <ol>
+                <span>R : </span>
+                <span id="R_"></span>
+                <input id="R" type="range" min="0" max="255" onchange="ch('R')">
+              </ol>
+              <ol>
+                <span>G : </span>
+                <span id="G_"></span>
+                <input id="G" type="range" min="0" max="255" onchange="ch('G')">
+              </ol>
+              <ol>
+                <span>B : </span>
+                <span id="B_"></span>
+                <input id="B" type="range" min="0" max="255" onchange="ch('B')">
+              </ol>
+            </ul>
+          <button class="btn_a" type="button" onclick="save()">Save</button>
+          <button class="overlay-option-event btn_a" type=button>Close</button>
         </div>
       </div>
     </div>

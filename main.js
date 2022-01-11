@@ -1,20 +1,20 @@
-let csvList;
-let csvAll = [[]];
-let typing = new Array();
-let option_;
-function load() {
-  if(!localStorage.getItem('option')) {
-    option_ = { "R":200, "G":200, "B":200, "name": "noname"};
-  } else {
-    option_ = localStorage.getItem('option');
-  }
-  $(function(){
-    $('#R').attr("value", option_["R"]);
-  })
-}
-load();
-function save() {
-  localStorage.setItem('option', option);
+// --- functions --- //
+function csv_(datapath, num){
+  const req = new XMLHttpRequest();
+  req.addEventListener("load", (event) =>{
+    const response = event.target.responseText;
+    const dataString = response.split('\n');
+    csvAll.length++;
+    for(let i=0;i<dataString.length;i++){
+      csvAll[num].push(dataString[i].split(','))
+    }
+    // console.log(csvList[num].name);
+    for(let i=0;i<csvAll[num].length;i++){
+      // console.log(csvAll[num][i][0] + " " + csvAll[num][i][1]);
+    }
+  });
+  req.open('GET', datapath, true);
+  req.send();
 }
 function generate_spell(read){
   let table = [];
@@ -29,7 +29,7 @@ function generate_spell(read){
         table[i].push(typing[read[i]][j]);
       }
     }
-    else console.log("error");
+    else console.log("error" + i);
   }
   // two-sound
   for(let i=0;i<read.length-1;i++){
@@ -42,6 +42,90 @@ function generate_spell(read){
   }
   return table;
 }
+// --- definition --- //
+let csvList;
+let csvAll = [[]];
+let typing = new Array();
+let option_;
+$.getJSON("Core/typing.json").done(function (json){
+  for(let i = 0; i < json.oneletter.length; i++){
+    typing[json.oneletter[i].letter] = json.oneletter[i].rome;
+  }
+  for(let i = 0; i < json.twoletter.length; i++){
+    typing[json.twoletter[i].letter] = json.twoletter[i].rome;
+  }
+}).fail(function(){
+  alert("jsonファイルの読み込みに失敗しました");
+});
+$.getJSON("User/index.json").done(function (json){
+  csvList = json.Data;
+  for(let i=0;i<csvList.length;i++){
+    csv_("User/" + csvList[i].url, i);
+  }
+}).fail(function(){
+  alert("jsonファイルの読み込みに失敗しました");
+});
+// --- options --- //
+function load() {
+  option_ = { "R": 200, "G": 200, "B": 200 };
+  if(localStorage.flag1) {
+    option_.R = localStorage.R;
+    option_.G = localStorage.G;
+    option_.B = localStorage.B;
+  }
+  reload();
+  $(function(){
+    document.getElementById("R_").innerHTML = option_.R;
+    document.getElementById("G_").innerHTML = option_.G;
+    document.getElementById("B_").innerHTML = option_.B;
+    color_try(option_.R, option_.G, option_.B);
+    color_change(option_.R, option_.G, option_.B);
+  })
+}
+function reload(){
+  $(function(){
+    $('#R').attr("value", option_.R);
+    $('#G').attr("value", option_.G);
+    $('#B').attr("value", option_.B);
+  })
+}
+function ch(s){
+  // option_[s] = Number(document.getElementById(s).value);
+  document.getElementById(s + "_").innerHTML = option_[s];
+  // color_change(option_.R, option_.G, option_.B);
+  color_try(Number(document.getElementById("R").value),Number(document.getElementById("G").value),Number(document.getElementById("B").value));
+}
+function color_try(a,b,c){
+  let color_try = document.getElementsByClassName('color_try');
+  color_try[0].style.backgroundColor = "rgb("+a+","+b+","+c+")"; 
+}
+function color_change(a, b, c){
+  let color1 = document.getElementsByClassName('color1');
+  let color2 = document.getElementsByClassName('color2');
+  let border1 = document.getElementsByClassName('border1');
+  for(let i=0;i<color1.length;i++){
+    color1[i].style.backgroundColor = "rgb("+a+","+b+","+c+")"; 
+  }
+  for(let i=0;i<color2.length;i++){
+    color2[i].style.backgroundColor = "rgb("+(255 -(255 - a) * 0.6)+","+(255 - (255 - b) * 0.6)+","+(255 - (255 - b) * 0.6)+")"; 
+  }
+  for(let i=0;i<border1.length;i++){
+    border1[i].style.border = "rgb("+a+","+b+","+c+") " + "solid 5px";
+  }
+}
+function save() {
+  option_.R = Number(document.getElementById("R").value)
+  option_.G = Number(document.getElementById("G").value)
+  option_.B = Number(document.getElementById("B").value)
+  localStorage.setItem('flag1', true);
+  localStorage.setItem('R', option_.R);
+  localStorage.setItem('G', option_.G);
+  localStorage.setItem('B', option_.B);
+  color_change(option_.R, option_.G, option_.B);
+  alert("設定を保存しました");
+}
+load();
+
 function goit(read){
   let table = generate_spell(read);
   console.log(table);
@@ -66,48 +150,12 @@ function test(){
     console.log(goit(csvAll[0][i][1]));
   }
 }
-$.getJSON("Core/typing.json").done(function (json){
-  for(let i = 0; i < json.oneletter.length; i++){
-    typing[json.oneletter[i].letter] = json.oneletter[i].rome;
-  }
-  for(let i = 0; i < json.twoletter.length; i++){
-    typing[json.twoletter[i].letter] = json.twoletter[i].rome;
-  }
-}).fail(function(){
-  alert("jsonファイルの読み込みに失敗しました");
-});
-function csv_(datapath, num){
-  const req = new XMLHttpRequest();
-  req.addEventListener("load", (event) =>{
-    const response = event.target.responseText;
-    const dataString = response.split('\n');
-    csvAll.length++;
-    for(let i=0;i<dataString.length;i++){
-      csvAll[num].push(dataString[i].split(','))
-    }
-    console.log(csvList[num].name);
-    for(let i=0;i<csvAll[num].length;i++){
-      console.log(csvAll[num][i][0] + " " + csvAll[num][i][1]);
-    }
-  });
-  req.open('GET', datapath, true);
-  req.send();
-}
-$.getJSON("User/index.json").done(function (json){
-  csvList = json.Data;
-  for(let i=0;i<csvList.length;i++){
-    csv_("User/" + csvList[i].url, i);
-  }
-}).fail(function(){
-  alert("jsonファイルの読み込みに失敗しました");
-});
 document.addEventListener('DOMContentLoaded', function(){
   function stopEvent_play(event) {
     event.stopPropagation();
   }
   function stopEvent_option(event) {
     event.stopPropagation();
-    save();
   }
   // play
   const overlay_play = document.getElementById('overlay-play');

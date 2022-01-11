@@ -69,6 +69,7 @@ h2{
 #play:hover{
   cursor:pointer;
 }
+
 #option{
   background-color: rgb(200,200,200);
   background-image:url("Assets/Images/Option.png");
@@ -93,6 +94,22 @@ h2{
   background: rgba(0,0,0,0.6);
   transition: all 0.5s ease-out;
 }
+#overlay-play.overlay-on{
+  visibility: visible;
+  opacity: 1;
+}
+#overlay-play-inner{
+  width:75vw;
+  height:75vh;
+  padding:10px 60px;
+  background-color:#FFF;
+  text-align:center;
+}
+
+
+
+
+
 #overlay-option{
   position: fixed;
   top:0;
@@ -104,28 +121,9 @@ h2{
   background: rgba(0,0,0,0.6);
   transition: all 0.5s ease-out;
 }
-#overlay-play.overlay-on{
-  visibility: visible;
-  opacity: 1;
-}
 #overlay-option.overlay-on{
   visibility: visible;
   opacity: 1;
-}
-
-.flex{
-  width: 100%;
-  height:100%;
-  display: flex;
-  justify-content: center;
-  align-items: center; 
-}
-#overlay-play-inner{
-  width:75vw;
-  height:75vh;
-  padding:10px 60px;
-  background-color:#FFF;
-  text-align:center;
 }
 #overlay-option-inner{
   width:40vw;
@@ -134,9 +132,31 @@ h2{
   background-color:#FFF;
   text-align:center;
 }
-
-#close-btn{
+#option_left{
+  height:calc(40vh - 150px);
   display:block;
+  margin-left:-25vw;
+}
+#option_left > ol{
+  margin-top: 15px;
+}
+#theme_color_title{
+  margin-left:27vw;
+  width: 150px;
+}
+.border1{
+  border-width: 5px;
+  border-color:black;
+}
+.flex{
+  width: 100%;
+  height:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+.btn_a{
+  display:inline;
   margin:20px auto;
   padding:10px 30px;
   background-color:#eee;

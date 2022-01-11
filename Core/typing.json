@@ -48,6 +48,7 @@
     {"id":46,"letter":"ん","rome":["n","nn","n'","xn"]},
     {"id":47,"letter":"が","rome":["ga"]},
     {"id":48,"letter":"ぎ","rome":["gi"]},
+    
     {"id":49,"letter":"ぐ","rome":["gu"]},
     {"id":50,"letter":"げ","rome":["ge"]},
     {"id":51,"letter":"ご","rome":["go"]},
@@ -111,7 +112,11 @@
     {"id":109,"letter":"X","rome":["x"]},
     {"id":110,"letter":"Y","rome":["y"]},
     {"id":111,"letter":"Z","rome":["z"]},
-    {"id":112,"letter":"　","rome":[" "]}
+    {"id":112,"letter":"　","rome":[" "]},
+    {"id":113,"letter":"ー","rome":["-"]},
+    {"id":114,"letter":"ゃ","rome":["lya","xya"]},
+    {"id":115,"letter":"ゅ","rome":["lyu","xyu"]},
+    {"id":116,"letter":"ょ","rome":["lyo","xyu"]}
   ],
   "twoletter":[
     {"id":1,"letter":"いぇ","rome":["ye"]},
