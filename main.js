@@ -1,70 +1,3 @@
-// --- functions --- //
-function csv_(datapath, num){
-  const req = new XMLHttpRequest();
-  req.addEventListener("load", (event) =>{
-    const response = event.target.responseText;
-    const dataString = response.split('\n');
-    csvAll.length++;
-    for(let i=0;i<dataString.length;i++){
-      csvAll[num].push(dataString[i].split(','))
-    }
-    // console.log(csvList[num].name);
-    for(let i=0;i<csvAll[num].length;i++){
-      // console.log(csvAll[num][i][0] + " " + csvAll[num][i][1]);
-    }
-  });
-  req.open('GET', datapath, true);
-  req.send();
-}
-function generate_spell(read){
-  let table = [];
-  table.length = read.length;
-  for(let i=0;i<table.length;i++){
-    table[i] = [];
-  }
-  // one-sound
-  for(let i=0;i<read.length;i++){
-    if(read[i] in typing){
-      for(let j=0;j<typing[read[i]].length;j++){
-        table[i].push(typing[read[i]][j]);
-      }
-    }
-    else console.log("error" + i);
-  }
-  // two-sound
-  for(let i=0;i<read.length-1;i++){
-    if(read[i] + read[i+1] in typing){
-      for(let j=0;j<typing[read[i] + read[i+1]].length;j++){
-        table[i].push(typing[read[i] + read[i+1]][j] + "|");
-      }
-    }
-    else continue;
-  }
-  return table;
-}
-// --- definition --- //
-let csvList;
-let csvAll = [[]];
-let typing = new Array();
-let option_;
-$.getJSON("Core/typing.json").done(function (json){
-  for(let i = 0; i < json.oneletter.length; i++){
-    typing[json.oneletter[i].letter] = json.oneletter[i].rome;
-  }
-  for(let i = 0; i < json.twoletter.length; i++){
-    typing[json.twoletter[i].letter] = json.twoletter[i].rome;
-  }
-}).fail(function(){
-  alert("jsonファイルの読み込みに失敗しました");
-});
-$.getJSON("User/index.json").done(function (json){
-  csvList = json.Data;
-  for(let i=0;i<csvList.length;i++){
-    csv_("User/" + csvList[i].url, i);
-  }
-}).fail(function(){
-  alert("jsonファイルの読み込みに失敗しました");
-});
 // --- options --- //
 function load() {
   option_ = { "R": 200, "G": 200, "B": 200 };
@@ -75,9 +8,6 @@ function load() {
   }
   reload();
   $(function(){
-    document.getElementById("R_").innerHTML = option_.R;
-    document.getElementById("G_").innerHTML = option_.G;
-    document.getElementById("B_").innerHTML = option_.B;
     color_try(option_.R, option_.G, option_.B);
     color_change(option_.R, option_.G, option_.B);
   })
@@ -96,6 +26,9 @@ function ch(s){
   color_try(Number(document.getElementById("R").value),Number(document.getElementById("G").value),Number(document.getElementById("B").value));
 }
 function color_try(a,b,c){
+  document.getElementById("R_").innerHTML = a;
+  document.getElementById("G_").innerHTML = b;
+  document.getElementById("B_").innerHTML = c;
   let color_try = document.getElementsByClassName('color_try');
   color_try[0].style.backgroundColor = "rgb("+a+","+b+","+c+")"; 
 }

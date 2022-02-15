@@ -99,13 +99,16 @@ h2{
   opacity: 1;
 }
 #overlay-play-inner{
-  width:75vw;
-  height:75vh;
+  width:1200px;
+  height:750px;
   padding:10px 60px;
   background-color:#FFF;
   text-align:center;
 }
-
+#game{
+  width:90%;
+  height:80%;
+}
 
 
 
@@ -126,22 +129,25 @@ h2{
   opacity: 1;
 }
 #overlay-option-inner{
-  width:40vw;
-  height:40vh;
+  width:650px;
+  height:400px;
   padding:10px 60px;
   background-color:#FFF;
   text-align:center;
 }
 #option_left{
-  height:calc(40vh - 150px);
+  height: 60%;
+  width: 45%;
   display:block;
-  margin-left:-25vw;
 }
 #option_left > ol{
   margin-top: 15px;
+  margin-left: 0;
+  text-align: left;
 }
 #theme_color_title{
-  margin-left:27vw;
+  text-align: center;
+  margin-left: 3%;
   width: 150px;
 }
 .border1{
