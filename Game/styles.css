@@ -1,8 +1,10 @@
+
 #game{
   overflow-y: hidden;
   background-color: black;
-  height:600px;
-  width:900px;
+  height:100%;
+  width:100%;
+  margin:0;
 }
 #start_button{
   margin-left:280px;
@@ -12,4 +14,26 @@
   background-color: white;
   height:200px;
   width:500px;
+}
+#wid{
+  display:none;
+}
+#scores{
+  background-color:white;
+  width: 100%;
+  padding: 0;
+}
+#scores > li{
+  display:inline;
+}
+#sentences{
+  background-color: white;
+  height: 300px;
+  margin-top:100px;
+  padding:0;
+  list-style: none;
+}
+#ja_s{
+  font-size: 30px;
+  text-align: center;
 }

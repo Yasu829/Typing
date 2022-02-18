@@ -43,6 +43,8 @@ function generate_spell(read){
   return table;
 }
 // --- definition --- //
+let stpwtch;
+let dat_now;
 let csvList;
 let csvAll = [[]];
 let typing = new Array();
@@ -70,8 +72,10 @@ $(function(){
   let game = document.getElementById("game");
   document.getElementById("start_button").addEventListener("mousedown", gamestart, false);
   function gamestart(){
-    alert("Enterでゲームスタート!")
-    game.innerHTML = "";
+    alert("Enterでゲームスタート!");
+    dat_now = Date.now();
+    $("#start_button").css("display", "none");
+    $("#wid").css("display", "block");
   }
 })
 document.addEventListener('keydown', keydown_event);
@@ -101,3 +105,7 @@ function keydown_event(e){
   }
   if(key != '') console.log(key);
 }
+setInterval( ()=>{
+  stpwtch = Date.now() - dat_now;
+  $("#time").html("経過時間 " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 )) + ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ));
+}, 10 );
