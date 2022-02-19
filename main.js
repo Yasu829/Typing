@@ -1,4 +1,5 @@
 // --- options --- //
+let option_;
 function load() {
   option_ = { "R": 200, "G": 200, "B": 200 };
   if(localStorage.flag1) {
@@ -45,6 +46,12 @@ function color_change(a, b, c){
   for(let i=0;i<border1.length;i++){
     border1[i].style.border = "rgb("+a+","+b+","+c+") " + "solid 5px";
   }
+  $('#game').contents().find('body').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
+  $('#game').contents().find('#don').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
+  $('#game').load(function(){
+    $('#game').contents().find('body').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
+    $('#game').contents().find('#don').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
+  });
 }
 function save() {
   option_.R = Number(document.getElementById("R").value)
@@ -58,26 +65,25 @@ function save() {
   alert("設定を保存しました");
 }
 load();
-
-function goit(read){
-  let table = generate_spell(read);
-  console.log(table);
-  let sentence = "";
-  for(let i=0;i<table.length;i++){
-    let flag = false;
-    for(let j=0;j<table[i].length;j++){
-      if(table[i][j][table[i][j].length - 1] == '|'){
-        flag = true;
-        sentence += table[i][j].substr(0,table[i][j].length - 1);
-        i++;
-        break;
-      }
-    }
-    if(flag) continue;
-    else sentence += table[i][0];
-  }
-  return sentence;
-}
+// function goit(read){
+//   let table = generate_spell(read);
+//   console.log(table);
+//   let sentence = "";
+//   for(let i=0;i<table.length;i++){
+//     let flag = false;
+//     for(let j=0;j<table[i].length;j++){
+//       if(table[i][j][table[i][j].length - 1] == '|'){
+//         flag = true;
+//         sentence += table[i][j].substr(0,table[i][j].length - 1);
+//         i++;
+//         break;
+//       }
+//     }
+//     if(flag) continue;
+//     else sentence += table[i][0];
+//   }
+//   return sentence;
+// }
 function test(){
   for(let i=0;i<csvAll[0].length;i++){
     console.log(goit(csvAll[0][i][1]));
@@ -85,6 +91,12 @@ function test(){
 }
 document.addEventListener('DOMContentLoaded', function(){
   function stopEvent_play(event) {
+    $('#game').contents().find('#start_button').css("display", "block");
+    $('#game').contents().find('#wid').css("display", "none");
+    $('#game').contents().find('#fr_s').html("");
+    $('#game').contents().find('#ja_s').html("");
+    $('#game').contents().find('#rom_s').html("");
+    $('#game')[0].contentDocument.location.reload(true)
     event.stopPropagation();
   }
   function stopEvent_option(event) {

@@ -45,10 +45,9 @@
     {"id":43,"letter":"ろ","rome":["ro"]},
     {"id":44,"letter":"わ","rome":["wa"]},
     {"id":45,"letter":"を","rome":["wo"]},
-    {"id":46,"letter":"ん","rome":["n","nn","n'","xn"]},
+    {"id":46,"letter":"ん","rome":["nn","xn"]},
     {"id":47,"letter":"が","rome":["ga"]},
     {"id":48,"letter":"ぎ","rome":["gi"]},
-    
     {"id":49,"letter":"ぐ","rome":["gu"]},
     {"id":50,"letter":"げ","rome":["ge"]},
     {"id":51,"letter":"ご","rome":["go"]},

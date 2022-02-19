@@ -1,4 +1,12 @@
 // --- functions --- //
+function isHanEisu(str){
+  str = (str==null)?"":str;
+  if(str.match(/^[A-Za-z0-9]*$/)){
+    return true;
+  }else{
+    return false;
+  }
+}
 function csv_(datapath, num){
   const req = new XMLHttpRequest();
   req.addEventListener("load", (event) =>{
@@ -23,7 +31,7 @@ function generate_spell(read){
     table[i] = [];
   }
   // one-sound
-  for(let i=0;i<read.length;i++){
+  function one_sound(i){
     if(read[i] in typing){
       for(let j=0;j<typing[read[i]].length;j++){
         table[i].push(typing[read[i]][j]);
@@ -32,23 +40,72 @@ function generate_spell(read){
     else console.log("error" + i);
   }
   // two-sound
-  for(let i=0;i<read.length-1;i++){
+  function two_sound(i){
     if(read[i] + read[i+1] in typing){
       for(let j=0;j<typing[read[i] + read[i+1]].length;j++){
         table[i].push(typing[read[i] + read[i+1]][j] + "|");
       }
     }
-    else continue;
+  }
+  function ltu_sound(i){
+    if(read[i+1] != 'あ' && read[i+1] != 'い' && read[i+1] != 'う' && read[i+1] != 'え' && read[i+1] != 'お' && read[i+1] != 'な' && read[i+1] != 'に' && read[i+1] != 'ぬ' && read[i+1] != 'ね' && read[i+1] != 'の' && read[i+1] != '　' && read[i+1] != '、' && read[i+1] != '。' && read[i+1] != 'ー' && read[i+1] != 'ん' && !isHanEisu(read[i+1])){
+      if(read[i+1] in typing){
+        for(let j=0;j<typing[read[i+1]].length;j++){
+          table[i].push(typing[read[i+1]][j][0] + typing[read[i+1]][j] + "|");
+        }
+      }
+      if(i<read.length-2){
+        if(read[i+1] + read[i+2] in typing){
+          for(let j=0;j<typing[read[i+1] + read[i+2]].length;j++){
+            table[i].push(typing[read[i+1] + read[i+2]][j][0] + typing[read[i+1] + read[i+2]][j] + "$");
+          }
+        }
+      }
+    }
+  }
+  function nn_sound(i){
+    if(read[i+1] != 'あ' && read[i+1] != 'い' && read[i+1] != 'う' && read[i+1] != 'え' && read[i+1] != 'お' && read[i+1] != 'な' && read[i+1] != 'に' && read[i+1] != 'ぬ' && read[i+1] != 'ね' && read[i+1] != 'の' && read[i+1] != '　' && read[i+1] != '、' && read[i+1] != '。' && read[i+1] != 'ー' && read[i+1] != 'ん' && !isHanEisu(read[i+1])){
+      if(read[i+1] in typing){
+        if(read[i+1] in typing){
+          for(let j=0;j<typing[read[i+1]].length;j++){
+            table[i].push("n" + typing[read[i+1]][j] + "|");
+          }
+        }
+        if(i<read.length-2){
+          if(read[i+1] + read[i+2] in typing){
+            for(let j=0;j<typing[read[i+1] + read[i+2]].length;j++){
+              table[i].push("n" + typing[read[i+1] + read[i+2]][j] + "$");
+            }
+          }
+        }
+      }
+    }
+  }
+  for(let i=0;i<read.length-1;i++){
+    if(read[i] == 'っ') ltu_sound(i)
+  }
+  for(let i=0;i<read.length-1;i++){
+    if(read[i] == 'ん') nn_sound(i)
+  }
+  for(let i=0;i<read.length-1;i++){
+    two_sound(i);
+  }
+  for(let i=0;i<read.length;i++){
+    one_sound(i);
   }
   return table;
+  // っ
 }
+
 // --- definition --- //
+let option = 10;
 let stpwtch;
 let dat_now;
 let csvList;
 let csvAll = [[]];
 let typing = new Array();
-let option_;
+let sound_miss = new Audio("../Assets/Sounds/miss.wav");
+let sound_correct = new Audio("../Assets/Sounds/correct.wav");
 $.getJSON("../Core/typing.json").done(function (json){
   for(let i = 0; i < json.oneletter.length; i++){
     typing[json.oneletter[i].letter] = json.oneletter[i].rome;
@@ -69,42 +126,147 @@ $.getJSON("../User/index.json").done(function (json){
 });
 //
 $(function(){
-  let game = document.getElementById("game");
+  let play_list = new Array(option);
+  let type_ = 0;
+  let miss_ = 0;
   document.getElementById("start_button").addEventListener("mousedown", gamestart, false);
   function gamestart(){
     alert("Enterでゲームスタート!");
     dat_now = Date.now();
     $("#start_button").css("display", "none");
     $("#wid").css("display", "block");
+    type_ = 0;
+    miss_ = 0;
+    $("#type").html("正解数 " + ('000' + type_).slice(-3));
+    $("#miss").html("ミス数 " + ('000' + miss_).slice(-3));
+    for(let i=0;i<option;i++){
+      let x = Math.floor(Math.random() * csvAll[0].length);
+      if(!( x in play_list )) play_list[i] = x;
+      else i--;
+    }
+    host(0);
+  }
+  function gameend(){
+    $("#start_button").css("display", "block");
+    $("#wid").css("display", "none");
+    $("#chart").html("経過時間 " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 )) + ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + "正解数 " + ('000' + type_).slice(-3) + "ミス数 " + ('000' + miss_).slice(-3));
+  }
+  function host(n){
+    console.log(play_list);
+    sent_display(play_list[n],n);
+  }
+  function create_rom(num, arr, p){
+    let s_ = "<span id='don'>";
+    let tab_ = generate_spell(csvAll[0][num][1]);
+    // console.log(tab_);
+    for(let i=0;i<tab_.length;i++){
+      let flag_b = false;
+      if(i == p){ s_ += "</span>" }
+      if(tab_[i][arr[i]].slice(-1) == '$'){
+        s_ += tab_[i][arr[i]].slice(0,tab_[i][arr[i]].length - 1);
+        i+=2;
+      }
+      if(tab_[i][arr[i]].slice(-1) == '|'){
+        s_ += tab_[i][arr[i]].slice(0,tab_[i][arr[i]].length - 1);
+        i++;
+      }
+      else s_ += tab_[i][arr[i]].slice(0,tab_[i][arr[i]].length);
+    }
+    return s_
+  }
+  function sent_display(num,n){
+    let key = '';
+    let pointer_ = 0;
+    let t_b = new Array(csvAll[0][num][1].length);
+    for(let i=0;i<t_b.length;i++) t_b[i] = 0;
+    $("#fr_s").html(csvAll[0][num][1]);
+    $("#ja_s").html(csvAll[0][num][0]);
+    $("#rom_s").html(create_rom(num,t_b,pointer_));
+    document.removeEventListener('keydown', keydown_event);
+    document.addEventListener('keydown', keydown_event);
+    function keydown_event(e){
+      let E = e.keyCode;
+      if(E == 13){
+        // key += "";
+      }
+      else if(E == 32){
+        key += " "
+      }
+      else if(E >= 48 && E < 58){
+        key += e.key;
+      }
+      else if(E >= 65 && E < 91){
+        key += e.key;
+      }
+      else if(E == 188){
+        key += ",";
+      }
+      else if(E == 189){
+        key += "-";
+      }
+      else if(E == 190){
+        key += "."
+      }
+      if(key != ''){
+        let point_ = generate_spell(csvAll[0][num][1]);
+        console.log(point_[pointer_]);
+        let flag_a = false;
+        for(let i=point_[pointer_].length-1;i>=0;i--){
+          if(point_[pointer_][i].slice(0,key.length) == key){
+            if(point_[pointer_][i].slice(-1) == '|'){
+              if(point_[pointer_][i].slice(0,point_[pointer_][i].length-1) == key){
+                t_b[pointer_] = i;
+                console.log("a");
+                pointer_+=2;
+                key = "";
+              }
+            }
+            else if(point_[pointer_][i].slice(-1) == '$'){
+              if(point_[pointer_][i].slice(0,point_[pointer_][i].length-1) == key){
+                t_b[pointer_] = i;
+                console.log("b");
+                pointer_+=3;
+                key = "";
+              }
+            }
+            else if(point_[pointer_][i] == key){
+              t_b[pointer_] = i;
+              console.log("c");
+              pointer_++;
+              key = "";
+            }
+            else{
+              t_b[pointer_] = i;
+            }
+            flag_a = true;
+            type_++;
+            console.log(type_);
+            $("#rom_s").html(create_rom(num,t_b,pointer_));
+            $("#type").html("正解数 " + ('000' + type_).slice(-3));
+          }
+        }
+        if(!flag_a){
+          sound_miss.play();
+          console.log(key + "|");
+          key = key.slice(0,key.length-1);
+          miss_++;
+          $("#miss").html("ミス数 " + ('000' + miss_).slice(-3));
+          // console.log(miss_);
+        }
+      }
+      if(pointer_ == t_b.length){
+        document.removeEventListener('keydown', keydown_event);
+        sound_correct.play();
+        setTimeout(() => {
+          if(n == option - 1){
+            gameend();
+          }
+          else host(n+1);
+        }, 500);
+      }
+    }
   }
 })
-document.addEventListener('keydown', keydown_event);
-function keydown_event(e){
-  let key = '';
-  let E = e.keyCode;
-  if(E == 13){
-    key = "Enter";
-  }
-  else if(E == 32){
-    key = "Space"
-  }
-  else if(E >= 48 && E < 58){
-    key = e.key;
-  }
-  else if(E >= 65 && E < 91){
-    key = e.key;
-  }
-  else if(E == 188){
-    key = ",";
-  }
-  else if(E == 189){
-    key = "-";
-  }
-  else if(E == 190){
-    key = "."
-  }
-  if(key != '') console.log(key);
-}
 setInterval( ()=>{
   stpwtch = Date.now() - dat_now;
   $("#time").html("経過時間 " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 )) + ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ));
