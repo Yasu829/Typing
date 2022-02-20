@@ -98,9 +98,14 @@ function generate_spell(read){
 }
 
 // --- definition --- //
-let Problems = 1;
+let Problem_set = 0;
+let Problems = 10;
 function change_number(i){
-  Problems = i;
+  if(i == 1) Problems = 1;
+  if(i == 2) Problems = 5;
+  if(i == 3) Problems = 10;
+  if(i == 4) Problems = -1;
+  console.log(Problems);
 }
 let stpwtch;
 let dat_now;
@@ -147,10 +152,17 @@ $(function(){
     miss_ = 0;
     $("#type").html("正解数 " + ('000' + type_).slice(-3));
     $("#miss").html("ミス数 " + ('000' + miss_).slice(-3));
-    for(let i=0;i<Problems;i++){
-      let x = Math.floor(Math.random() * csvAll[0].length);
-      if(!play_list.includes(x)) play_list.push(x);
-      else i--;
+    if(Problems == -1){
+      for(let i=0;i<csvAll[Problem_set].length;i++){
+        play_list.push(i);
+      }
+    }
+    else{
+      for(let i=0;i<Problems;i++){
+        let x = Math.floor(Math.random() * csvAll[Problem_set].length);
+        if(!play_list.includes(x)) play_list.push(x);
+        else i--;
+      }
     }
     host(0);
   }
@@ -165,7 +177,8 @@ $(function(){
     $("#high_score").html("ハイスコア: " + window.parent.high_score_change(score_));
     if(score_ == window.parent.high_score_change(score_)) $("#score_").html("スコア " + score_ + "<span id='don'>←ハイスコア更新!!!</span>");
     else $("#score_").html("スコア " + score_);
-    tweet = "ヤスタイプを問題数: " + Problems +"でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
+    if(Problems == -1) tweet = "ヤスタイプを問題数: " + csvList[i].length +"(全問)でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
+    else tweet = "ヤスタイプを問題数: " + Problems + "でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
     let at_ = document.getElementById("twitter").attributes;
     document.getElementById("twitter").setAttribute("href", "https://twitter.com/share?hashtags=ヤスタイプ&url=https://Yasu829.github.io/Typing&text=" + tweet);
   }
@@ -181,7 +194,7 @@ $(function(){
   }
   function create_rom(num, arr, p){
     let s_ = "<span id='don'>";
-    let tab_ = generate_spell(csvAll[0][num][1]);
+    let tab_ = generate_spell(csvAll[Problem_set][num][1]);
     // console.log(tab_);
     for(let i=0;i<tab_.length;i++){
       let flag_b = false;
@@ -201,11 +214,11 @@ $(function(){
   function sent_display(num,n){
     let key = '';
     let pointer_ = 0;
-    let t_b = new Array(csvAll[0][num][1].length);
+    let t_b = new Array(csvAll[Problem_set][num][1].length);
     console.log(t_b.length);
     for(let i=0;i<t_b.length;i++) t_b[i] = 0;
-    $("#fr_s").html(csvAll[0][num][1]);
-    $("#ja_s").html(csvAll[0][num][0]);
+    $("#fr_s").html(csvAll[Problem_set][num][1]);
+    $("#ja_s").html(csvAll[Problem_set][num][0]);
     $("#rom_s").html(create_rom(num,t_b,pointer_));
     document.removeEventListener('keydown', keydown_event);
     document.addEventListener('keydown', keydown_event);
@@ -233,7 +246,7 @@ $(function(){
         key += "."
       }
       if(key != ''){
-        let point_ = generate_spell(csvAll[0][num][1]);
+        let point_ = generate_spell(csvAll[Problem_set][num][1]);
         console.log(point_[pointer_]);
         let flag_a = false;
         for(let i=point_[pointer_].length-1;i>=0;i--){
@@ -288,10 +301,19 @@ $(function(){
         document.removeEventListener('keydown', keydown_event);
         sound_correct.play();
         setTimeout(() => {
-          if(n == Problems - 1){
-            gameend();
+          if(Problems == -1){
+            console.log(pointer_);
+            if(n == play_list.length - 1){
+              gameend();
+            }
+            else host(n+1);
           }
-          else host(n+1);
+          else{
+            if(n == Problems - 1){
+              gameend();
+            }
+            else host(n+1);
+          }
         }, 50);
       }
     }

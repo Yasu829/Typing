@@ -21,17 +21,19 @@ function csv_(datapath){
 // --- options --- //
 let option_;
 function load() {
-  option_ = { "R": 200, "G": 200, "B": 200, "Problems": 10};
+  option_ = { "R": 200, "G": 200, "B": 200, "Problems": 3};
   if(localStorage.flag1) {
     option_.R = localStorage.R;
     option_.G = localStorage.G;
     option_.B = localStorage.B;
+    option_.Problems = localStorage.Problems;
   }
   reload();
   csv_("Core/color.csv");
   $(function(){
     color_try(option_.R, option_.G, option_.B);
-    change(option_.R, option_.G, option_.B);
+    Problems_try(option_.Problems);
+    change(option_.R, option_.G, option_.B,option_.Problems);
   })
 }
 function reload(){
@@ -39,6 +41,7 @@ function reload(){
     $('#R').attr("value", option_.R);
     $('#G').attr("value", option_.G);
     $('#B').attr("value", option_.B);
+    $('#Problems').attr("value", option_.Problems);
   })
 }
 function ch(s){
@@ -46,6 +49,10 @@ function ch(s){
   document.getElementById(s + "_").innerHTML = option_[s];
   // change(option_.R, option_.G, option_.B);
   color_try(Number(document.getElementById("R").value),Number(document.getElementById("G").value),Number(document.getElementById("B").value));
+}
+function p_ch(){
+  let v = document.getElementById("Problems").value;
+  Problems_try(v);
 }
 function color_try(a,b,c){
   $('#R').attr("value", a);
@@ -56,8 +63,18 @@ function color_try(a,b,c){
   document.getElementById("B_").innerHTML = c;
   let color_try = document.getElementsByClassName('color_try');
   color_try[0].style.backgroundColor = "rgb("+a+","+b+","+c+")"; 
+  color_try[1].style.backgroundColor = "rgb("+a+","+b+","+c+")"; 
 }
-function change(a, b, c){
+function Problems_try(v){
+  $("#Problems").attr("value", v);
+  document.getElementById("Problems_").innerHTML = v;
+  if(v == 1) document.getElementById("Problems_discription").innerHTML = "一問だけのモード。運試しに。";
+  else if(v == 2) document.getElementById("Problems_discription").innerHTML = "五問のモード。お手軽！";
+  else if(v == 3) document.getElementById("Problems_discription").innerHTML = "十問のモード。標準的。";
+  else if(v == 4) document.getElementById("Problems_discription").innerHTML = "全問のモード。フルマラソン並みにきつい。";
+}
+let flag_c = false;
+function change(a, b, c, v){
   let color1 = document.getElementsByClassName('color1');
   let color2 = document.getElementsByClassName('color2');
   let border1 = document.getElementsByClassName('border1');
@@ -70,22 +87,30 @@ function change(a, b, c){
   for(let i=0;i<border1.length;i++){
     border1[i].style.border = "rgb("+a+","+b+","+c+") " + "solid 5px";
   }
-  $('#game').contents().find('body').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
-  $('#game').contents().find('#don').css("backgroundColor", "rgb("+a * 0.8 +","+b * 0.8+","+c * 0.8+") ");
-  $('#game').load(function(){
+  if(flag_c){
     $('#game').contents().find('body').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
-    $('#game').contents().find('#don').css("backgroundColor", "rgb("+a * 0.8+","+b * 0.8+","+c * 0.8+") ");
+    $('#game').contents().find('#don').css("color", "rgb("+a * 0.8 +","+b * 0.8+","+c * 0.8+") ");
+    document.getElementById("game").contentWindow.change_number(v);
+  }
+  $('#game').load(function(){
+    flag_c = true;
+    document.getElementById("game").contentWindow.change_number(v);
+    $('#game').contents().find('body').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
+    $('#game').contents().find('#don').css("color", "rgb("+a*0.8+","+b*0.8 +","+c*0.8+") ");
   });
+
 }
 function save() {
-  option_.R = Number(document.getElementById("R").value)
-  option_.G = Number(document.getElementById("G").value)
-  option_.B = Number(document.getElementById("B").value)
+  option_.R = Number(document.getElementById("R").value);
+  option_.G = Number(document.getElementById("G").value);
+  option_.B = Number(document.getElementById("B").value);
+  option_.Problems = Number(document.getElementById("Problems").value);
   localStorage.setItem('flag1', true);
   localStorage.setItem('R', option_.R);
   localStorage.setItem('G', option_.G);
   localStorage.setItem('B', option_.B);
-  change(option_.R, option_.G, option_.B);
+  localStorage.setItem('Problems', option_.Problems);
+  change(option_.R, option_.G, option_.B,option_.Problems);
   alert("設定を保存しました");
 }
 function high_score_change(score){

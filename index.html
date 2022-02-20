@@ -38,28 +38,47 @@
       <div class="flex">
         <div id="overlay-option-inner" class="border1">
           <p>オプション</p>
-            <ul id="option_left">
-              <ol>
-                <p id="theme_color_title" class="color_try">テーマ色</p>
-              </ol>
-              <ol>
-                <span>R : </span>
-                <span id="R_"></span>
-                <input id="R" type="range" min="0" max="255" onchange="ch('R')">
-              </ol>
-              <ol>
-                <span>G : </span>
-                <span id="G_"></span>
-                <input id="G" type="range" min="0" max="255" onchange="ch('G')">
-              </ol>
-              <ol>
-                <span>B : </span>
-                <span id="B_"></span>
-                <input id="B" type="range" min="0" max="255" onchange="ch('B')">
-              </ol>
-              <ol id="color_palette">
-              </ol>
-            </ul>
+          <ul id="options">
+            <li>
+              <ul id="option_left">
+                <ol>
+                  <p id="theme_color_title" class="color_try">テーマ色</p>
+                </ol>
+                <ol>
+                  <span>R : </span>
+                  <span id="R_"></span>
+                  <input id="R" type="range" min="0" max="255" onchange="ch('R')">
+                </ol>
+                <ol>
+                  <span>G : </span>
+                  <span id="G_"></span>
+                  <input id="G" type="range" min="0" max="255" onchange="ch('G')">
+                </ol>
+                <ol>
+                  <span>B : </span>
+                  <span id="B_"></span>
+                  <input id="B" type="range" min="0" max="255" onchange="ch('B')">
+                </ol>
+                <ol id="color_palette">
+                </ol>
+              </ul>
+            </li>
+            <li>
+              <ul id="option_right">
+                <ol>
+                  <p id="mode_title" class="color_try">プレイモード</p>
+                </ol>
+                <ol>
+                  <span id="Problems_">1</span>
+                  <input id="Problems" type="range" value="1" min="1" max="4" onchange="p_ch()">
+                  <p id="Problems_discription"></p>
+                </ol>
+                <ol>
+                  <p id="game_set_title">ゲームセット選択</p>
+                </ol>
+              </ul>
+            </li>
+          </ul>
           <button class="btn_a" type="button" onclick="save()">Save</button>
           <button class="overlay-option-event btn_a" type=button>Close</button>
         </div>
