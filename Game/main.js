@@ -129,7 +129,16 @@ $(function(){
   let play_list = new Array();
   let type_ = 0;
   let miss_ = 0;
+  let tweet = "";
   document.getElementById("start_button").addEventListener("mousedown", gamestart, false);
+  document.getElementById("back_to_start").addEventListener("click",backtostart,false);
+  document.getElementById("copy").addEventListener("click",function a(e){
+    e.clipboardData.setData("text/plain" , tweet);    
+    // 本来のイベントをキャンセル
+    e.preventDefault();
+    // 終わったら一応削除
+    document.removeEventListener("copy", a);
+  },false)
   function gamestart(){
     alert("Enterでゲームスタート!");
     dat_now = Date.now();
@@ -157,10 +166,9 @@ $(function(){
     $("#type_").html("正解数 " + ('000' + type_).slice(-3));
     $("#miss_").html("ミス数 " + ('000' + miss_).slice(-3));
     $("#score_").html("スコア " + score_);
-    let tweet = "ヤスタイプを問題数: " + option +"でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
+    tweet = "ヤスタイプを問題数: " + option +"でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
     let at_ = document.getElementById("twitter").attributes;
     document.getElementById("twitter").setAttribute("href", "https://twitter.com/share?hashtags=ヤスタイプ&url=https://Yasu829.github.io/Typing&text=" + tweet);
-    document.getElementById("back_to_start").addEventListener("click",backtostart,false);
   }
   function backtostart(){
     $("#start_button").css("display", "block");

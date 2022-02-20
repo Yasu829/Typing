@@ -84,6 +84,13 @@ p{
   text-align: center;
 }
 #twitter > img{
+  display: inline;
+  height:30px;
+  width:30px;
+  border-radius: 15px;
+}
+#copy{
+  display: inline;
   height:30px;
   width:30px;
   border-radius: 15px;
