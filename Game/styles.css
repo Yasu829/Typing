@@ -57,3 +57,34 @@ p{
 #don{
   color:rgb(200,200,200);
 }
+
+#result{
+  display:none;
+  width:600px;
+  height:400px;
+  margin-top:50px;
+  margin-left: 230px;
+  background-color: white;
+  border:solid;
+}
+#result > h1{
+  text-align:center;
+}
+#result > button{
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  padding:10px 30px;
+  background-color:#eee;
+  border:solid #ccc 1px;
+  cursor: pointer;
+}
+#twitter{
+  display:block;
+  text-align: center;
+}
+#twitter > img{
+  height:30px;
+  width:30px;
+  border-radius: 15px;
+}

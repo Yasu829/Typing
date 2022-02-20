@@ -126,7 +126,7 @@ $.getJSON("../User/index.json").done(function (json){
 });
 //
 $(function(){
-  let play_list = new Array(option);
+  let play_list = new Array();
   let type_ = 0;
   let miss_ = 0;
   document.getElementById("start_button").addEventListener("mousedown", gamestart, false);
@@ -135,21 +135,38 @@ $(function(){
     dat_now = Date.now();
     $("#start_button").css("display", "none");
     $("#wid").css("display", "block");
+    $("#result").css("display", "none");
+    play_list = [];
     type_ = 0;
     miss_ = 0;
     $("#type").html("正解数 " + ('000' + type_).slice(-3));
     $("#miss").html("ミス数 " + ('000' + miss_).slice(-3));
     for(let i=0;i<option;i++){
       let x = Math.floor(Math.random() * csvAll[0].length);
-      if(!( x in play_list )) play_list[i] = x;
+      if(!play_list.includes(x)) play_list.push(x);
       else i--;
     }
     host(0);
   }
   function gameend(){
+    let score_ = Math.floor(type_ * 3600000 / stpwtch * ((type_ - miss_) / type_) + type_ * 15);
+    $("#start_button").css("display", "none");
+    $("#wid").css("display", "none");
+    $("#result").css("display", "block");
+    $("#time_").html("経過時間 " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ));
+    $("#type_").html("正解数 " + ('000' + type_).slice(-3));
+    $("#miss_").html("ミス数 " + ('000' + miss_).slice(-3));
+    $("#score_").html("スコア " + score_);
+    let tweet = "ヤスタイプを問題数: " + option +"でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
+    let at_ = document.getElementById("twitter").attributes;
+    document.getElementById("twitter").setAttribute("href", "https://twitter.com/share?hashtags=ヤスタイプ&url=https://Yasu829.github.io/Typing&text=" + tweet);
+    document.getElementById("back_to_start").addEventListener("click",backtostart,false);
+  }
+  function backtostart(){
     $("#start_button").css("display", "block");
     $("#wid").css("display", "none");
-    $("#chart").html("経過時間 " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 )) + ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + "正解数 " + ('000' + type_).slice(-3) + "ミス数 " + ('000' + miss_).slice(-3));
+    $("#result").css("display", "none");
+    removeEventListener("click",backtostart,false);
   }
   function host(n){
     console.log(play_list);
@@ -262,7 +279,7 @@ $(function(){
             gameend();
           }
           else host(n+1);
-        }, 500);
+        }, 50);
       }
     }
   }
