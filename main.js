@@ -1,16 +1,37 @@
+function csv_(datapath){
+  let colors_ = [];
+  const req = new XMLHttpRequest();
+  req.addEventListener("load", (event) =>{
+    const response = event.target.responseText;
+    const dataString = response.split('\n');
+    for(let i=0;i<dataString.length;i++){
+      colors_.push(dataString[i].split(","));
+    }
+    for(let i=0;i<colors_.length;i++){
+      let palette = document.createElement("div");
+      palette.setAttribute("onclick","color_try("+colors_[i][0] +","+ colors_[i][1] +"," +colors_[i][2] +")");
+      palette.style.backgroundColor = "rgb("+colors_[i][0]+","+colors_[i][1]+","+colors_[i][2]+")";
+      console.log(palette);
+      document.getElementById("color_palette").innerHTML += (palette).outerHTML; 
+    }
+  });
+  req.open('GET', datapath, true);
+  req.send();
+}
 // --- options --- //
 let option_;
 function load() {
-  option_ = { "R": 200, "G": 200, "B": 200 };
+  option_ = { "R": 200, "G": 200, "B": 200, "Problems": 10};
   if(localStorage.flag1) {
     option_.R = localStorage.R;
     option_.G = localStorage.G;
     option_.B = localStorage.B;
   }
   reload();
+  csv_("Core/color.csv");
   $(function(){
     color_try(option_.R, option_.G, option_.B);
-    color_change(option_.R, option_.G, option_.B);
+    change(option_.R, option_.G, option_.B);
   })
 }
 function reload(){
@@ -23,17 +44,20 @@ function reload(){
 function ch(s){
   // option_[s] = Number(document.getElementById(s).value);
   document.getElementById(s + "_").innerHTML = option_[s];
-  // color_change(option_.R, option_.G, option_.B);
+  // change(option_.R, option_.G, option_.B);
   color_try(Number(document.getElementById("R").value),Number(document.getElementById("G").value),Number(document.getElementById("B").value));
 }
 function color_try(a,b,c){
+  $('#R').attr("value", a);
+  $('#G').attr("value", b);
+  $('#B').attr("value", c);
   document.getElementById("R_").innerHTML = a;
   document.getElementById("G_").innerHTML = b;
   document.getElementById("B_").innerHTML = c;
   let color_try = document.getElementsByClassName('color_try');
   color_try[0].style.backgroundColor = "rgb("+a+","+b+","+c+")"; 
 }
-function color_change(a, b, c){
+function change(a, b, c){
   let color1 = document.getElementsByClassName('color1');
   let color2 = document.getElementsByClassName('color2');
   let border1 = document.getElementsByClassName('border1');
@@ -47,10 +71,10 @@ function color_change(a, b, c){
     border1[i].style.border = "rgb("+a+","+b+","+c+") " + "solid 5px";
   }
   $('#game').contents().find('body').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
-  $('#game').contents().find('#don').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
+  $('#game').contents().find('#don').css("backgroundColor", "rgb("+a * 0.8 +","+b * 0.8+","+c * 0.8+") ");
   $('#game').load(function(){
     $('#game').contents().find('body').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
-    $('#game').contents().find('#don').css("backgroundColor", "rgb("+a+","+b+","+c+") ");
+    $('#game').contents().find('#don').css("backgroundColor", "rgb("+a * 0.8+","+b * 0.8+","+c * 0.8+") ");
   });
 }
 function save() {
@@ -61,8 +85,20 @@ function save() {
   localStorage.setItem('R', option_.R);
   localStorage.setItem('G', option_.G);
   localStorage.setItem('B', option_.B);
-  color_change(option_.R, option_.G, option_.B);
+  change(option_.R, option_.G, option_.B);
   alert("設定を保存しました");
+}
+function high_score_change(score){
+  if(localStorage.flag2){
+    if(score > localStorage.High_score){
+      localStorage.High_score = score;
+    }
+  }
+  else{
+    localStorage.setItem('flag2',true);
+    localStorage.setItem('High_score',score);
+  }
+  return localStorage.High_score;
 }
 load();
 // function goit(read){

@@ -98,7 +98,10 @@ function generate_spell(read){
 }
 
 // --- definition --- //
-let option = 10;
+let Problems = 1;
+function change_number(i){
+  Problems = i;
+}
 let stpwtch;
 let dat_now;
 let csvList;
@@ -126,19 +129,13 @@ $.getJSON("../User/index.json").done(function (json){
 });
 //
 $(function(){
+  $("#high_score").html("ハイスコア: " + window.parent.high_score_change(0));
   let play_list = new Array();
   let type_ = 0;
   let miss_ = 0;
   let tweet = "";
   document.getElementById("start_button").addEventListener("mousedown", gamestart, false);
   document.getElementById("back_to_start").addEventListener("click",backtostart,false);
-  document.getElementById("copy").addEventListener("click",function a(e){
-    e.clipboardData.setData("text/plain" , tweet);    
-    // 本来のイベントをキャンセル
-    e.preventDefault();
-    // 終わったら一応削除
-    document.removeEventListener("copy", a);
-  },false)
   function gamestart(){
     alert("Enterでゲームスタート!");
     dat_now = Date.now();
@@ -150,7 +147,7 @@ $(function(){
     miss_ = 0;
     $("#type").html("正解数 " + ('000' + type_).slice(-3));
     $("#miss").html("ミス数 " + ('000' + miss_).slice(-3));
-    for(let i=0;i<option;i++){
+    for(let i=0;i<Problems;i++){
       let x = Math.floor(Math.random() * csvAll[0].length);
       if(!play_list.includes(x)) play_list.push(x);
       else i--;
@@ -165,8 +162,10 @@ $(function(){
     $("#time_").html("経過時間 " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ));
     $("#type_").html("正解数 " + ('000' + type_).slice(-3));
     $("#miss_").html("ミス数 " + ('000' + miss_).slice(-3));
-    $("#score_").html("スコア " + score_);
-    tweet = "ヤスタイプを問題数: " + option +"でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
+    $("#high_score").html("ハイスコア: " + window.parent.high_score_change(score_));
+    if(score_ == window.parent.high_score_change(score_)) $("#score_").html("スコア " + score_ + "<span id='don'>←ハイスコア更新!!!</span>");
+    else $("#score_").html("スコア " + score_);
+    tweet = "ヤスタイプを問題数: " + Problems +"でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
     let at_ = document.getElementById("twitter").attributes;
     document.getElementById("twitter").setAttribute("href", "https://twitter.com/share?hashtags=ヤスタイプ&url=https://Yasu829.github.io/Typing&text=" + tweet);
   }
@@ -203,6 +202,7 @@ $(function(){
     let key = '';
     let pointer_ = 0;
     let t_b = new Array(csvAll[0][num][1].length);
+    console.log(t_b.length);
     for(let i=0;i<t_b.length;i++) t_b[i] = 0;
     $("#fr_s").html(csvAll[0][num][1]);
     $("#ja_s").html(csvAll[0][num][0]);
@@ -237,6 +237,7 @@ $(function(){
         console.log(point_[pointer_]);
         let flag_a = false;
         for(let i=point_[pointer_].length-1;i>=0;i--){
+          console.log(point_[pointer_][i]);
           if(point_[pointer_][i].slice(0,key.length) == key){
             if(point_[pointer_][i].slice(-1) == '|'){
               if(point_[pointer_][i].slice(0,point_[pointer_][i].length-1) == key){
@@ -264,13 +265,17 @@ $(function(){
               t_b[pointer_] = i;
             }
             flag_a = true;
-            type_++;
-            console.log(type_);
             $("#rom_s").html(create_rom(num,t_b,pointer_));
-            $("#type").html("正解数 " + ('000' + type_).slice(-3));
+            if(pointer_ == t_b.length) break;
           }
         }
-        if(!flag_a){
+        if(flag_a){
+          type_++;
+          console.log(type_);
+          console.log(pointer_);
+          $("#type").html("正解数 " + ('000' + type_).slice(-3));
+        }
+        else{
           sound_miss.play();
           console.log(key + "|");
           key = key.slice(0,key.length-1);
@@ -283,7 +288,7 @@ $(function(){
         document.removeEventListener('keydown', keydown_event);
         sound_correct.play();
         setTimeout(() => {
-          if(n == option - 1){
+          if(n == Problems - 1){
             gameend();
           }
           else host(n+1);

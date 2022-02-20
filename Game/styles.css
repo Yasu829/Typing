@@ -15,6 +15,13 @@
   height:200px;
   width:500px;
 }
+#start_button > h1{
+  text-align: center;
+  margin-top: 60px;
+}
+#high_score{
+  text-align: center;
+}
 #wid{
   display:none;
 }
