@@ -167,7 +167,7 @@ $(function(){
     host(0);
   }
   function gameend(){
-    let score_ = Math.floor(type_ * 3600000 / stpwtch * ((type_ - miss_) / type_) + type_ * 15);
+    let score_ = Math.floor(type_ * 3600000 / stpwtch * ((type_ - miss_) / type_) * ((type_ - miss_) / type_) + type_ * 5);
     $("#start_button").css("display", "none");
     $("#wid").css("display", "none");
     $("#result").css("display", "block");
@@ -177,10 +177,10 @@ $(function(){
     $("#high_score").html("ハイスコア: " + window.parent.high_score_change(score_));
     if(score_ == window.parent.high_score_change(score_)) $("#score_").html("スコア " + score_ + "<span id='don'>←ハイスコア更新!!!</span>");
     else $("#score_").html("スコア " + score_);
-    if(Problems == -1) tweet = "ヤスタイプを問題数: " + csvList[i].length +"(全問)でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
-    else tweet = "ヤスタイプを問題数: " + Problems + "でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
+    if(Problems == -1) tweet = "スーチー打を問題数: " + csvList[i].length +"(全問)でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
+    else tweet = "スーチー打を問題数: " + Problems + "でプレイし、経過時間: " + String(( '00' + Math.floor(stpwtch/60000) ).slice( -2 )) + ":" + String(( '00' + Math.floor((stpwtch%60000)/1000) ).slice( -2 ))+ ":" + String(( '00' + Math.floor(stpwtch % 1000)) ).slice( -2 ) + " 正解数: " + ('000' + type_).slice(-3) + " ミス数: " + ('000' + miss_).slice(-3) + " 総合スコア: " + score_ + "でクリアしました！";
     let at_ = document.getElementById("twitter").attributes;
-    document.getElementById("twitter").setAttribute("href", "https://twitter.com/share?hashtags=ヤスタイプ&url=https://Yasu829.github.io/Typing&text=" + tweet);
+    document.getElementById("twitter").setAttribute("href", "https://twitter.com/share?hashtags=スーチー打&url=https://Yasu829.github.io/Typing&text=" + tweet);
   }
   function backtostart(){
     $("#start_button").css("display", "block");
